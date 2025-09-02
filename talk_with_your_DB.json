@@ -1,0 +1,164 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Try me out\nClick the 'chat' button at the bottom of the canvas and paste in:\n\n_Which tables are available?_"
+      },
+      "id": "3a05b092-e966-421b-80dd-d96231142a18",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        384
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "This workflow uses a Postgres DB, but you could swap it for a MySQL or SQLite one",
+        "height": 505,
+        "width": 677,
+        "color": 7
+      },
+      "id": "7a33a682-2ba3-4f1c-81f7-b4d9185e5424",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        80
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "33b81afa-0235-41b2-9e00-03c7d9895ea0",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -48,
+        192
+      ],
+      "webhookId": "1c0d08f0-abd0-4bdc-beef-370c27aae1a0",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $fromAI('sql_statement') }}",
+        "options": {}
+      },
+      "id": "e8b4bce0-667e-4b6f-b341-e9ea68ff2f91",
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgresTool",
+      "position": [
+        400,
+        384
+      ],
+      "typeVersion": 2.5
+    },
+    {
+      "parameters": {},
+      "id": "a25cfedf-322a-46ea-aed7-5531b739aee8",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        272,
+        400
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "89ac77da-cdcd-4c41-937a-60cd2c0f43d6",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        176,
+        192
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        48,
+        400
+      ],
+      "id": "98cc8b5e-ebb6-4665-afc0-ee08ccefa80a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Txze0C76QUxQLfms",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Postgres": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7a6b31d8-0291-4922-a804-82b493c92f16",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1809d64313a7277dd188a641a5059fc2f7c665d68e0b64dcd0391d0cd45c39db"
+  },
+  "id": "u4RhXtH7aRlDwzxX",
+  "tags": []
+}
